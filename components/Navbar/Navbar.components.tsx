@@ -44,9 +44,9 @@ export default function Navbar() {
         {
           !isAuthed && (
             <>
-              <Button variant="primary">Login</Button>
+              <Button path="/login" variant="primary">Login</Button>
 
-              <Button variant="secondary">Sign Up</Button>
+              <Button path="/register" variant="secondary">Sign Up</Button>
             </>
           )
         }
