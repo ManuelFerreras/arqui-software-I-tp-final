@@ -3,7 +3,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
-export default function Course() {
+export default function Course({ params }: { params: { slug: string } }) {
   return (
     <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 h-full">
       <div className="grid gap-4 md:gap-10 items-start">
@@ -15,7 +15,7 @@ export default function Course() {
           width={800}
         />
         <div className="grid gap-4">
-          <h1 className="text-3xl font-bold">Introduction to Web Development</h1>
+          <h1 className="text-3xl font-bold">Introduction to Web Development, { params.slug }</h1>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-0.5">
               <StarIcon className="w-5 h-5 fill-primary" />
