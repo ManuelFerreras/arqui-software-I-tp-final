@@ -1,3 +1,5 @@
+"use client";
+
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -5,8 +7,43 @@ import S from "./Login.module.css";
 import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useState } from "react";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async () => {
+    // check that email is well formated.
+    if (!email.includes("@") && !email.includes(".")) {
+      console.error("Invalid email");
+      return;
+    }
+
+    // check that password is at least 8 characters long.
+    if (password.length < 8) {
+      console.error("Password must be at least 8 characters long");
+      return;
+    }
+
+    // Handle login logic here
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      // Successful login
+      console.log("Login successful");
+    } else {
+      // Invalid credentials
+      console.error("Invalid credentials");
+    }
+  };
+
   return (
     <div className="flex items-center justify-center">
       <Card className="w-full max-w-md ">
@@ -25,7 +62,7 @@ export default function Login() {
             <Label  htmlFor="email">
               Email
             </Label>
-            <Input id="email" placeholder="m@example.com" required type="email" />
+            <Input id="email" placeholder="m@example.com" value={email} onChange={e => setEmail(e.target.value)} required type="email" />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -39,11 +76,11 @@ export default function Login() {
                 Forgot password?
               </Link>
             </div>
-            <Input id="password" required type="password" />
+            <Input id="password" required value={password} onChange={e => setPassword(e.target.value)} type="password" />
           </div>
         </CardContent>
         <CardFooter className="grid gap-2">
-          <Button className="w-full bg-[rgb(159,51,233)] text-white hover:bg-[rgb(159,51,233)]/90" type="submit">
+          <Button className="w-full bg-[rgb(159,51,233)] text-white hover:bg-[rgb(159,51,233)]/90" type="submit" onClick={handleSubmit}>
             Sign In
           </Button>
           <Link href="/register">
