@@ -10,3 +10,15 @@ export type CourseType = {
   CreationTime: string;
   LastUpdated: string;
 }
+
+export type UserType = {
+  id: number;
+  email: string;
+  username: string;
+  name: string;
+  last_name: string;
+  usertype: boolean;
+  password_hash: string;
+  CreationTime: string;
+  LastUpdated: string;
+}

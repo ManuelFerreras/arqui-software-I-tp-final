@@ -4,11 +4,10 @@ import Link from "next/link";
 import Button from "../Button/Button.components";
 import S from "./Navbar.module.css";
 import Image from "next/image";
-import { useState } from "react";
+import { useUser } from "@/hooks/useUser";
 
 export default function Navbar() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isAuthed, setIsAuthed] = useState(false);
+  const { user, isAdmin, isAuthed, logout } = useUser();
 
   return (
     <header className={` ${S.navbar} flex items-center justify-between p-4`}>
@@ -36,7 +35,7 @@ export default function Navbar() {
                 <p className="text-sm font-bold">My Courses</p>
               </Link>
 
-              <Button variant="secondary">Logout</Button>
+              <Button handleClick={() => logout()} variant="secondary">{user?.username}</Button>
             </>
           )
         }

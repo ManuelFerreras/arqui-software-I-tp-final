@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   // Handle login logic here
   const data = await request.json();
   const { email, password } = data;
-  console.log(data);
 
   const baseUrl = process.env.BASE_API_URL ?? "";
 
@@ -17,9 +17,10 @@ export async function POST(request: Request) {
   });
   
   const userJson = await usersReq.json();
-  console.log(userJson);
-
   if (userJson.error) return NextResponse.json({ message: userJson.error }, { status: 401 });
+
+  const cookieStore = cookies();
+  cookieStore.set("token", JSON.stringify(userJson));
 
   return NextResponse.json({ message: 'Logged In.', user: userJson }, { status: 200 });
 }

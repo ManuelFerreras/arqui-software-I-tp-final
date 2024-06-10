@@ -1,0 +1,50 @@
+import routes from "@/lib/routes";
+import { UserType } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from "react";
+
+export function useUser() {
+  const [user, setUser] = useState<UserType>();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const refreshUser = async () => {
+    const response = await fetch("/api/auth/user");
+    if (response.ok) {
+      const userJson = await response.json();
+
+      setUser(userJson.user);
+      setIsAuthed(true);
+      setIsAdmin(userJson?.user?.usertype);
+    } else {
+      setUser(undefined);
+    }
+  }
+
+  const logout = () => {
+    console.log("logging out")
+    fetch("/api/auth/logout")
+    .then((response) => {
+      if (response.ok) {
+        setUser(undefined);
+        setIsAuthed(false);
+        setIsAdmin(false);
+        router.push(routes.login);
+      }
+    })
+  }
+
+  // useEffect(() => {
+  //   refreshUser();
+  // }, []);
+
+  // on route change refresh user.
+  useEffect(() => {
+    refreshUser();
+  }, [pathname]);
+
+  return { user, isAdmin, isAuthed, refreshUser, logout };
+}

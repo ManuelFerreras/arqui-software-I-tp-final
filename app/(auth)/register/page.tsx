@@ -7,6 +7,8 @@ import Image from "next/image"
 import S from "./Register.module.css";
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation";
+import routes from "@/lib/routes";
 
 export default function Component() {
   const [Email, setEmail] = useState("");
@@ -16,6 +18,7 @@ export default function Component() {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
   const [UserType, setUserType] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () => {
     // check that Email is well formated.
@@ -52,11 +55,9 @@ export default function Component() {
     });
 
     if (response.ok) {
-      // Successful login
-      console.log("Login successful");
+      router.push(routes.login);
     } else {
-      // Invalid credentials
-      console.error("Invalid credentials");
+      console.error("Invalid Register");
     }
   };
 

@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { DropdownMenuTrigger, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
 import { useEffect, useRef, useState } from "react"
 import { CourseType } from "@/lib/types";
 import CourseCard from "@/components/CourseCard/CourseCard.components";

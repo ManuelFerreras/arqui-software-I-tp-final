@@ -14,7 +14,6 @@ export default function Course({ params }: { params: { slug: string } }) {
     fetch(`/api/courses/courseId?courseId=${params?.slug}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         setCourse(data?.course)
         setSrc(data?.course?.ImageURL ?? "/placeholder.svg")
       })
@@ -40,13 +39,6 @@ export default function Course({ params }: { params: { slug: string } }) {
         <div className="grid gap-4">
           <h1 className="text-3xl font-bold">{course?.course_name}</h1>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-0.5">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-            </div>
             <span className="text-sm text-gray-500 dark:text-gray-400">4.2 (1,234 reviews)</span>
           </div>
           <div className="grid gap-2">

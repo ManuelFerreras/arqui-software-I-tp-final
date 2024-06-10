@@ -8,10 +8,15 @@ import { CardContent, CardFooter, Card, CardHeader, CardTitle, CardDescription }
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useState } from "react";
+import routes from "@/lib/routes";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const { refreshUser } = useUser();
 
   const handleSubmit = async () => {
     // check that email is well formated.
@@ -36,8 +41,8 @@ export default function Login() {
     });
 
     if (response.ok) {
-      // Successful login
-      console.log("Login successful");
+      await refreshUser();
+      router.push(routes.home);
     } else {
       // Invalid credentials
       console.error("Invalid credentials");
