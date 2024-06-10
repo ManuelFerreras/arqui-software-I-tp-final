@@ -1,9 +1,29 @@
+"use client";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useEffect, useState } from "react"
+import { CourseType } from "@/lib/types";
 
 export default function Course({ params }: { params: { slug: string } }) {
+  const [course, setCourse] = useState<CourseType>()
+  const [src, setSrc] = useState<string>("/placeholder.svg")
+
+  useEffect(() => {
+    fetch(`/api/courses/courseId?courseId=${params?.slug}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        setCourse(data?.course)
+        setSrc(data?.course?.ImageURL ?? "/placeholder.svg")
+      })
+  }, [])
+
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString()
+  }
+
   return (
     <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 h-full">
       <div className="grid gap-4 md:gap-10 items-start">
@@ -11,11 +31,14 @@ export default function Course({ params }: { params: { slug: string } }) {
           alt="Course Preview"
           className="rounded-lg w-full aspect-[16/9] object-cover"
           height={450}
-          src="/placeholder.svg"
+          onError={() => {
+            setSrc("/placeholder.svg");
+          }}
+          src={src}
           width={800}
         />
         <div className="grid gap-4">
-          <h1 className="text-3xl font-bold">Introduction to Web Development, { params.slug }</h1>
+          <h1 className="text-3xl font-bold">{course?.course_name}</h1>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-0.5">
               <StarIcon className="w-5 h-5 fill-primary" />
@@ -27,21 +50,18 @@ export default function Course({ params }: { params: { slug: string } }) {
             <span className="text-sm text-gray-500 dark:text-gray-400">4.2 (1,234 reviews)</span>
           </div>
           <div className="grid gap-2">
-            <p className="text-gray-500 dark:text-gray-400">
-              Learn the fundamentals of web development, including HTML, CSS, and JavaScript. This course is perfect for
-              beginners who want to build their first website.
-            </p>
+            <p className="text-gray-500 dark:text-gray-400">{course?.description}</p>
             <div className="flex items-center gap-2">
               <UserIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
               <span className="text-sm text-gray-500 dark:text-gray-400">Instructor: John Doe</span>
             </div>
             <div className="flex items-center gap-2">
               <ClockIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <span className="text-sm text-gray-500 dark:text-gray-400">12 hours of video</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{course?.length} hours of video</span>
             </div>
             <div className="flex items-center gap-2">
               <CalendarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <span className="text-sm text-gray-500 dark:text-gray-400">Last updated: May 13, 2024</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Last updated: {formatDate(course?.LastUpdated ?? "")}</span>
             </div>
           </div>
         </div>
@@ -60,13 +80,6 @@ export default function Course({ params }: { params: { slug: string } }) {
               <div className="grid gap-2">
                 <div className="flex items-center gap-2">
                   <h4 className="font-semibold">Sarah Johnson</h4>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
-                    <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
-                  </div>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   This course is amazing! The instructor explains everything so clearly and the projects are really
@@ -82,13 +95,6 @@ export default function Course({ params }: { params: { slug: string } }) {
               <div className="grid gap-2">
                 <div className="flex items-center gap-2">
                   <h4 className="font-semibold">Alex Smith</h4>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-primary" />
-                    <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
-                  </div>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   I&aposve been looking for a comprehensive web development course for a while, and this one exceeded my
