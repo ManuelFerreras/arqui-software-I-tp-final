@@ -188,7 +188,7 @@ export default function Component() {
             </div>
 
             <Link href="/course/1">
-              <Button className="w-full">Enroll Now</Button>
+            <button onClick={() => window.alert("You were successfully enrolled to the course")}>Enroll</button>
             </Link>
           </div>
         </div>
