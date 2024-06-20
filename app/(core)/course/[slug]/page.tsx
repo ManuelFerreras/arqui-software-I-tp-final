@@ -19,14 +19,34 @@ export default function Course({ params }: { params: { slug: string } }) {
   }, [course]);
 
   useEffect(() => {
+    updateCourses()
+  }, [])
+
+  const updateCourses = () => {
     fetch(`/api/courses/courseId?courseId=${params?.slug}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log(data)
         setCourse(data?.course)
         setComments(data?.comments.slice(0, 4))
         setSrc(data?.course?.ImageURL ?? "/placeholder.svg")
       })
-  }, [])
+  }
+
+  const addComment = () => {
+    const comment = prompt("Enter your comment:");
+
+    if (comment) {
+      fetch(`/api/courses/comment`, {
+        method: "POST",
+        body: JSON.stringify({ courseId: params?.slug, comment }),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          updateCourses();
+        });
+    }
+  }
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString()
@@ -94,10 +114,11 @@ export default function Course({ params }: { params: { slug: string } }) {
           </CardHeader>
           <CardContent className="grid gap-4">
             {
-              comments.map((comment) => (
+              comments?.map((comment) => (
                 <CommentCard key={comment.comment_id} comment={comment} />
               ))
             }
+            <Button onClick={addComment} variant={"secondary"} size="lg">Add Comment</Button>
           </CardContent>
         </Card>
         <Button onClick={enroll} variant={!alreadyEnrrolled ? "default" : "outline"} disabled={alreadyEnrrolled} size="lg">{!alreadyEnrrolled ? "Enroll in Course" : "Already Enrolled"}</Button>
