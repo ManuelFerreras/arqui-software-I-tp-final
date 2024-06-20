@@ -9,18 +9,22 @@ export async function POST(request: Request) {
   const baseUrl = process.env.BASE_API_URL ?? "";
 
   const usersReq = await fetch(`${baseUrl}/user/login`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
   });
-  
+
   const userJson = await usersReq.json();
-  if (userJson.error) return NextResponse.json({ message: userJson.error }, { status: 401 });
+  if (userJson.error)
+    return NextResponse.json({ message: userJson.error }, { status: 401 });
 
   const cookieStore = cookies();
-  cookieStore.set("token", JSON.stringify(userJson));
+  cookieStore.set("auth", userJson?.token ?? "");
 
-  return NextResponse.json({ message: 'Logged In.', user: userJson }, { status: 200 });
+  return NextResponse.json(
+    { message: "Logged In.", user: userJson },
+    { status: 200 }
+  );
 }

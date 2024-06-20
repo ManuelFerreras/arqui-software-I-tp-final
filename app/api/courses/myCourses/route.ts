@@ -1,15 +1,22 @@
+import { formatCookies, getCookieValue } from "@/lib/api.utils";
+import { jwtDecode } from "jwt-decode";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const baseUrl = process.env.BASE_API_URL ?? "";
 
-  const category = request.nextUrl.searchParams.get("category") ?? "";
-  const name = request.nextUrl.searchParams.get("name") ?? "";
+  const cookie = formatCookies();
+  const cookieValue = getCookieValue();
 
-  const url = `${baseUrl}/courses/search?q=${name}&category=${category}`;
+  const decoded = jwtDecode(cookieValue ?? "") as any;
+  const userId = decoded?.id;
+
+  const url = `${baseUrl}/user/courses/${userId}`;
 
   const coursesReq = await fetch(url, {
-    cache: "no-cache",
+    headers: {
+      cookie: cookie,
+    },
   });
 
   const coursesJson = await coursesReq.json();

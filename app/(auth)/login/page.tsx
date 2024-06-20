@@ -40,6 +40,9 @@ export default function Login() {
       body: JSON.stringify({ email, password }),
     });
 
+    const responseJson = await response.json();
+    console.log(responseJson);
+
     if (response.ok) {
       await refreshUser();
       router.push(routes.home);
@@ -64,14 +67,14 @@ export default function Login() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label  htmlFor="email">
+            <Label htmlFor="email">
               Email
             </Label>
             <Input id="email" placeholder="m@example.com" value={email} onChange={e => setEmail(e.target.value)} required type="email" />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label  htmlFor="password">
+              <Label htmlFor="password">
                 Password
               </Label>
               <Link

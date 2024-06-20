@@ -5,10 +5,17 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { CourseType } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 export default function Course({ params }: { params: { slug: string } }) {
   const [course, setCourse] = useState<CourseType>()
   const [src, setSrc] = useState<string>("/placeholder.svg")
+  const [alreadyEnrrolled, setAlreadyEnrolled] = useState(false)
+  const router = useRouter();
+
+  useEffect(() => {
+    setAlreadyEnrolled(course?.is_subscribed ?? false)
+  }, [course]);
 
   useEffect(() => {
     fetch(`/api/courses/courseId?courseId=${params?.slug}`)
@@ -21,6 +28,28 @@ export default function Course({ params }: { params: { slug: string } }) {
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString()
+  }
+
+  const enroll = async () => {
+    if (alreadyEnrrolled) return;
+
+    const response = await fetch(`/api/courses/subscribe`, {
+      method: "POST",
+      body: JSON.stringify({ courseId: params?.slug }),
+    });
+
+    const responseJson = await response.json();
+    console.log(responseJson);
+
+    if (response.ok) {
+      // Show success.
+      const newCourse = { ...course, is_subscribed: true } as CourseType;
+      setCourse(newCourse);
+      router.push(`/success/${params?.slug}`);
+    } else {
+      // Invalid.
+      console.error("Error while enrolling to course.");
+    }
   }
 
   return (
@@ -38,13 +67,11 @@ export default function Course({ params }: { params: { slug: string } }) {
         />
         <div className="grid gap-4">
           <h1 className="text-3xl font-bold">{course?.course_name}</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500 dark:text-gray-400">4.2 (1,234 reviews)</span>
-          </div>
           <div className="grid gap-2">
             <p className="text-gray-500 dark:text-gray-400">{course?.description}</p>
             <div className="flex items-center gap-2">
               <UserIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              {/* TODO: Change hardcoded instructor name. */}
               <span className="text-sm text-gray-500 dark:text-gray-400">Instructor: John Doe</span>
             </div>
             <div className="flex items-center gap-2">
@@ -97,7 +124,7 @@ export default function Course({ params }: { params: { slug: string } }) {
             </div>
           </CardContent>
         </Card>
-        <Button size="lg">Enroll in Course</Button>
+        <Button onClick={enroll} variant={!alreadyEnrrolled ? "default" : "outline"} disabled={alreadyEnrrolled} size="lg">{!alreadyEnrrolled ? "Enroll in Course" : "Already Enrolled"}</Button>
       </div>
     </div>
   )
@@ -125,7 +152,6 @@ function CalendarIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-
 function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -145,27 +171,6 @@ function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   )
 }
-
-
-function StarIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  )
-}
-
 
 function UserIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

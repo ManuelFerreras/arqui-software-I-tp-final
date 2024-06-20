@@ -54,6 +54,9 @@ export default function Component() {
       body: JSON.stringify({ Email, PasswordHash: Password, Username, FirstName, LastName, UserType }),
     });
 
+    const responseJson = await response.json();
+    console.log(responseJson);
+
     if (response.ok) {
       router.push(routes.login);
     } else {

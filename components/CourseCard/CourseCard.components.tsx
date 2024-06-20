@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CourseType } from "@/lib/types";
 import { useState } from "react";
 
-export default function CourseCard({ course }: { course: CourseType }) {
+export default function CourseCard({ course, enrolled }: { course: CourseType, enrolled?: boolean }) {
   const [src, setSrc] = useState<string>(course.ImageURL ?? "/placeholder.svg")
 
   return (
@@ -37,7 +37,7 @@ export default function CourseCard({ course }: { course: CourseType }) {
           </div>
         </div>
         <Link href={`/course/${course.course_id}`}>
-          <Button className="w-full">Enroll Now</Button>
+          <Button variant={enrolled ? "outline" : "default"} className="w-full">{"View Course"}</Button>
         </Link>
       </div>
     </div>

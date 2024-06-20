@@ -1,7 +1,7 @@
 import routes from "@/lib/routes";
 import { UserType } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function useUser() {
@@ -13,29 +13,30 @@ export function useUser() {
 
   const refreshUser = async () => {
     const response = await fetch("/api/auth/user");
-    if (response.ok) {
-      const userJson = await response.json();
+    const userJson = await response.json();
+    console.log(userJson);
 
-      setUser(userJson.user);
-      setIsAuthed(true);
-      setIsAdmin(userJson?.user?.usertype);
-    } else {
+    if (userJson?.shouldLogin) {
       setUser(undefined);
+      return;
     }
-  }
+
+    setUser(userJson?.user);
+    setIsAuthed(true);
+    setIsAdmin(userJson?.user?.usertype);
+  };
 
   const logout = () => {
-    console.log("logging out")
-    fetch("/api/auth/logout")
-    .then((response) => {
+    console.log("logging out");
+    fetch("/api/auth/logout").then((response) => {
       if (response.ok) {
         setUser(undefined);
         setIsAuthed(false);
         setIsAdmin(false);
         router.push(routes.login);
       }
-    })
-  }
+    });
+  };
 
   // useEffect(() => {
   //   refreshUser();

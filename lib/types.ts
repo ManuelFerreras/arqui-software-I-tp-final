@@ -9,7 +9,8 @@ export type CourseType = {
   ImageURL: string;
   CreationTime: string;
   LastUpdated: string;
-}
+  is_subscribed: boolean;
+};
 
 export type UserType = {
   id: number;
@@ -21,4 +22,4 @@ export type UserType = {
   password_hash: string;
   CreationTime: string;
   LastUpdated: string;
-}
+};
