@@ -32,8 +32,17 @@ export async function GET(request: NextRequest) {
   );
   const courseJson = await courseReq.json();
 
+  const courseCommentsReq = await fetch(`${baseUrl}/comments/${courseId}`);
+  const courseCommentsJson = await courseCommentsReq.json();
+
+  console.log(courseCommentsJson);
+
   return NextResponse.json(
-    { message: "Courses fetched", course: courseJson },
+    {
+      message: "Courses fetched",
+      course: courseJson,
+      comments: courseCommentsJson,
+    },
     { status: 200 }
   );
 }

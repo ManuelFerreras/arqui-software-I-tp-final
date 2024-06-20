@@ -3,6 +3,7 @@ export type CourseType = {
   course_name: string;
   description: string;
   instructor_id: number;
+  instructor_name: string;
   category: string;
   requirements: string;
   length: number;
@@ -20,6 +21,16 @@ export type UserType = {
   last_name: string;
   usertype: boolean;
   password_hash: string;
+  CreationTime: string;
+  LastUpdated: string;
+};
+
+export type CommentType = {
+  comment_id: number;
+  course_id: number;
+  user_id: number;
+  user_name: string;
+  comment: string;
   CreationTime: string;
   LastUpdated: string;
 };

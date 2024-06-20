@@ -1,14 +1,15 @@
 "use client";
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { CourseType } from "@/lib/types";
+import { CommentType, CourseType } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import CommentCard from "@/components/CommentCard/CommentCard.components";
 
 export default function Course({ params }: { params: { slug: string } }) {
   const [course, setCourse] = useState<CourseType>()
+  const [comments, setComments] = useState<CommentType[]>([])
   const [src, setSrc] = useState<string>("/placeholder.svg")
   const [alreadyEnrrolled, setAlreadyEnrolled] = useState(false)
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function Course({ params }: { params: { slug: string } }) {
       .then((res) => res.json())
       .then((data) => {
         setCourse(data?.course)
+        setComments(data?.comments.slice(0, 4))
         setSrc(data?.course?.ImageURL ?? "/placeholder.svg")
       })
   }, [])
@@ -72,7 +74,7 @@ export default function Course({ params }: { params: { slug: string } }) {
             <div className="flex items-center gap-2">
               <UserIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
               {/* TODO: Change hardcoded instructor name. */}
-              <span className="text-sm text-gray-500 dark:text-gray-400">Instructor: John Doe</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">Instructor: {course?.instructor_name}</span>
             </div>
             <div className="flex items-center gap-2">
               <ClockIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
@@ -91,37 +93,11 @@ export default function Course({ params }: { params: { slug: string } }) {
             <CardTitle>Comments</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <div className="flex gap-4">
-              <Avatar className="w-10 h-10 border">
-                <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-2">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold">Sarah Johnson</h4>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  This course is amazing! The instructor explains everything so clearly and the projects are really
-                  engaging. Highly recommended for anyone interested in web development.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <Avatar className="w-10 h-10 border">
-                <AvatarImage alt="@shadcn" src="/placeholder-user.jpg" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-2">
-                <div className="flex items-center gap-2">
-                  <h4 className="font-semibold">Alex Smith</h4>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  I&aposve been looking for a comprehensive web development course for a while, and this one exceeded my
-                  expectations. The instructor is knowledgeable and the course content is well-structured. Definitely
-                  worth the investment.
-                </p>
-              </div>
-            </div>
+            {
+              comments.map((comment) => (
+                <CommentCard key={comment.comment_id} comment={comment} />
+              ))
+            }
           </CardContent>
         </Card>
         <Button onClick={enroll} variant={!alreadyEnrrolled ? "default" : "outline"} disabled={alreadyEnrrolled} size="lg">{!alreadyEnrrolled ? "Enroll in Course" : "Already Enrolled"}</Button>
