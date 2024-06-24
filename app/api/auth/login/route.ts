@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   const data = await request.json();
   const { email, password } = data;
 
-  const baseUrl = process.env.BASE_API_URL ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? "";
 
   const usersReq = await fetch(`${baseUrl}/user/login`, {
     method: "POST",

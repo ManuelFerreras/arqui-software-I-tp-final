@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const decoded = jwtDecode(cookieValue ?? "") as any;
   const userId = decoded?.id;
 
-  const baseUrl = process.env.BASE_API_URL ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? "";
   const userReq = await fetch(`${baseUrl}/user/${userId}`, {
     headers: {
       cookie: `auth=${cookieValue}`,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const baseUrl = process.env.BASE_API_URL ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? "";
 
   const category = request.nextUrl.searchParams.get("category") ?? "";
   const name = request.nextUrl.searchParams.get("name") ?? "";

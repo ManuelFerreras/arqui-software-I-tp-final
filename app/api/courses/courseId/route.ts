@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const decoded = jwtDecode(cookieValue ?? "") as any;
   const userId = decoded?.id;
 
-  const baseUrl = process.env.BASE_API_URL ?? "";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL ?? "";
 
   // Get courseId from query params.
   const cookie = formatCookies();
